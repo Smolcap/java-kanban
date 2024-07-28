@@ -1,13 +1,16 @@
+package model;
+
 import model.Epic;
 import model.Subtask;
 import model.business.InMemoryTaskManager;
+import model.business.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
-    InMemoryTaskManager manager = new InMemoryTaskManager();
+    InMemoryTaskManager manager = new InMemoryTaskManager(Managers.getDefaultHistory());
 
     @Test
     public void shouldNotAddSubtaskYourselfOfEpic() {
@@ -19,6 +22,6 @@ class SubtaskTest {
 
         final Subtask savedSubtask = manager.getSubtaskId(subtaskEpic);
 
-        assertNull(savedSubtask, "Подзадача не может быть Epic");
+        Assertions.assertNull(savedSubtask, "Подзадача не может быть Epic");
     }
 }

@@ -7,17 +7,21 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager {
-    private static final HashMap<Integer, Task> tasks = new HashMap<>();
-    private static final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private static final HashMap<Integer, Epic> epics = new HashMap<>();
+    private static final Map<Integer, Task> tasks = new HashMap<>();
+    private static final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private static final Map<Integer, Epic> epics = new HashMap<>();
 
     private int generationId = 0;
 
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    private HistoryManager historyManager = Managers.getDefaultHistory();
 
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
     @Override
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks.values());

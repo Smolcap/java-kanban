@@ -8,6 +8,6 @@ class ManagersTest {
     @Test
     public void shouldReturnsInitializedAndReadyToUseManager() {
         TaskManager manager = Managers.getDefault();
-        assertNotNull(manager,"Менеджер вовзращает не готовый к работе экземпляр");
+        Assertions.assertNotNull(manager,"Менеджер вовзращает не готовый к работе экземпляр");
     }
 }
