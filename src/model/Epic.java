@@ -7,7 +7,7 @@ public class Epic extends Task {
 
     protected ArrayList<Integer> subtaskId = new ArrayList<>();
 
-    public Epic( String name, String description) {
+    public Epic(String name, String description) {
         super(name, description);
     }
 
@@ -19,7 +19,7 @@ public class Epic extends Task {
         subtaskId.add(id);
     }
 
-    public void cleanSubtaskId () {
+    public void cleanSubtaskId() {
         subtaskId.clear();
     }
 
@@ -27,7 +27,7 @@ public class Epic extends Task {
         return subtaskId;
     }
 
-    public void removeSubtaskId(int id){
+    public void removeSubtaskId(int id) {
         subtaskId.remove(Integer.valueOf(id));
     }
 

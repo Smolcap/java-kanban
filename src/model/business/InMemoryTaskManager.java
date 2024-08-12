@@ -22,6 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
     }
+
     @Override
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks.values());
@@ -78,7 +79,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Integer addNewTask(Task task) {
         final int id = ++generationId;
-        task.setId(++generationId);
+        task.setId(id);
         tasks.put(id, task);
         return id;
     }
@@ -100,12 +101,14 @@ public class InMemoryTaskManager implements TaskManager {
         final int id = ++generationId;
         subtask.setId(id);
         subtasks.put(id, subtask);
+
+        epic.addSubtaskId(id);
+
         return id;
     }
 
     @Override
     public void updateTask(Task task) {
-        ArrayList<Task> updateTask = new ArrayList<>(tasks.values());
         if (!tasks.containsKey(task.getId())) {
             System.out.println("Ошибка обновления задачи");
         } else {
@@ -116,7 +119,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        ArrayList<Task> updateEpic = new ArrayList<>(epics.values());
         if (!epics.containsKey(epic.getId())) {
             System.out.println("Ошибка обновления задачи");
         } else {
@@ -128,7 +130,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        ArrayList<Subtask> updateSubtask = new ArrayList<>(subtasks.values());
         if (!subtasks.containsKey(subtask.getEpicId())) {
             System.out.println("Ошибка обновления задачи");
         } else {
@@ -140,44 +141,54 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeByTaskId(int taskId) {
-        Task task = tasks.get(taskId);
         if (!tasks.containsKey(taskId)) {
             System.out.println("Задача с ID" + taskId + "не найден");
         } else {
             tasks.remove(taskId);
+            historyManager.remove(taskId);
         }
+        System.out.println("Задача с ID " + taskId + " была успешно удалена");
     }
 
     @Override
     public void removeByEpicId(int epicId) {
-        Epic epic = epics.get(epicId);
         if (!epics.containsKey(epicId)) {
             System.out.println("Епик с ID" + epicId + " не найден");
         } else {
+            Epic epic = epics.get(epicId);
             ArrayList<Integer> subtaskId = epic.getSubtaskId();
+            System.out.println("Список подзадач " + subtaskId);
             for (Integer subtasksId : subtaskId) {
-                Subtask subtask = subtasks.remove(subtasksId);
+                subtasks.remove(subtasksId);
+                historyManager.remove(subtasksId);
             }
             epics.remove(epicId);
+            historyManager.remove(epicId);
         }
     }
 
     @Override
     public void removeBySubtaskId(int subtaskId) {
         Subtask subtask = subtasks.get(subtaskId);
-        if (!subtasks.containsKey(subtaskId)) {
-            System.out.println("Сабтаск с ID" + subtaskId + " не найден");
-        } else {
-            subtasks.remove(subtaskId);
+        if (subtask == null) {
+            System.out.println("Сабтаск с ID " + subtaskId + " не найден");
+            return;
         }
-        updateEpicStatus(subtask.getEpicId());
+
+        subtasks.remove(subtaskId);
+        historyManager.remove(subtaskId);
+
+        for (Epic epic : epics.values()) {
+            epic.removeSubtaskId(subtaskId);
+            updateEpicStatus(subtask.getEpicId());
+        }
     }
 
     public ArrayList<Subtask> allListSubtaskByEpic(int epicId) {
         ArrayList<Subtask> subtaskArrayList = new ArrayList<>();
         Epic epic = epics.get(epicId);
         if (epic == null) {
-            System.out.println("Эписк с ID" + epicId + " не найден");
+            System.out.println("Эпик с ID" + epicId + " не найден");
             return subtaskArrayList;
         }
         for (int subtaskId : epic.getSubtaskId()) {
@@ -189,7 +200,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subtaskArrayList;
     }
 
-    static void updateEpicStatus(int epicId) {
+    public void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
             System.out.println("Эпик с ID " + epicId + " не найден.");
