@@ -6,18 +6,6 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static class Node<T> {
-        T data;
-        Node<T> prev;
-        Node<T> next;
-
-        private Node(Node<T> prev, T data, Node<T> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     private final Map<Integer, Node<Task>> saveIdsAndNodes = new HashMap<>();
 
     private Node<Task> head;
@@ -85,7 +73,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return getTasks();
     }
 
-    public void removeNode(Node<Task> node) {
+    private void removeNode(Node<Task> node) {
         if (node == null) {
             return;
         }
@@ -106,4 +94,18 @@ public class InMemoryHistoryManager implements HistoryManager {
         node.next = null;
         size--;
     }
+
+    private static class Node<T> {
+        T data;
+        Node<T> prev;
+        Node<T> next;
+
+        private Node(Node<T> prev, T data, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
 }
+
+
