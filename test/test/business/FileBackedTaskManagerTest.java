@@ -201,7 +201,11 @@ class FileBackedTaskManagerTest {
 
         FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(tempFile);
 
+<<<<<<< HEAD
         Assertions.assertEquals(manager, fileBackedTaskManager1, "Содержание файлов отличается");
+=======
+        Assertions.assertEquals(manager , fileBackedTaskManager1, "Содержание файлов отличается");
+>>>>>>> c3219c3832d27f7fc6a73153f760e57e3b25130a
     }
 
     @Test
@@ -217,7 +221,10 @@ class FileBackedTaskManagerTest {
                 " содержать записи после загрузки из пустого файла");
 
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> c3219c3832d27f7fc6a73153f760e57e3b25130a
     @Test
     public void shouldSaveTask() {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
