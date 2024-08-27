@@ -201,7 +201,11 @@ class FileBackedTaskManagerTest {
 
         FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(tempFile);
 
+
         Assertions.assertEquals(manager, fileBackedTaskManager1, "Содержание файлов отличается");
+
+        Assertions.assertEquals(manager, fileBackedTaskManager1, "Содержание файлов отличается");
+
     }
 
     @Test
