@@ -30,36 +30,31 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldInMemoryTaskManagerAddTasksAndSearchId() {
-        Task task = new Task("A", "Eat Snicker");
-
+        Task task = new Task("Task№1", "Description№1");
         final int taskId = manager.addNewTask(task);
         final Task savedTask = manager.getTaskId(taskId);
+        final ArrayList<Task> tasks = manager.getTasks();
+
+        Epic epic = new Epic("Epic№1", "Description№1");
+        final int epicId = manager.addNewEpic(epic);
+        final Epic savedEpic = manager.getEpicId(epicId);
+        final ArrayList<Epic> epics = manager.getEpics();
+
+        Subtask subtask = new Subtask("Subtask №1", "Description№1", epicId);
+        final int subtaskId = manager.addNewSubtask(subtask);
+        final Subtask savedSubtask = manager.getSubtaskId(subtaskId);
+        final ArrayList<Subtask> subtasks = manager.getSubtask();
 
         assertEquals(task, savedTask, "Сохраненная задача не соответствует добавленной");
 
-        final ArrayList<Task> tasks = manager.getTasks();
-
         Assertions.assertTrue(tasks.contains(task), "Список задач не содержит добавленной задачи");
-
-        Epic epic = new Epic("A", "Open a chocolate");
-
-        final int epicId = manager.addNewEpic(epic);
-        final Epic savedEpic = manager.getEpicId(epicId);
 
         assertEquals(epic, savedEpic, "Сохраненная задача Epic не соответствует добавленной");
 
-        final ArrayList<Epic> epics = manager.getEpics();
-
         Assertions.assertTrue(epics.contains(epic), "Список Epic не содержит добавленной задачи");
-
-        Subtask subtask = new Subtask("A", "Throw the wrapper", epicId);
-
-        final int subtaskId = manager.addNewSubtask(subtask);
-        final Subtask savedSubtask = manager.getSubtaskId(subtaskId);
 
         assertEquals(subtask, savedSubtask, "Сохраненная задача Subtask не соответствует добавленной");
 
-        final ArrayList<Subtask> subtasks = manager.getSubtask();
         Assertions.assertTrue(subtasks.contains(subtask), "Список Subtask не содержит добавленной задачи");
     }
 
@@ -69,10 +64,9 @@ class InMemoryTaskManagerTest {
 
         Task task = new Task("A", "Eat Snicker");
         final int taskFirsId = manager.addNewTask(task);
-        final Task savedTask = manager.getTaskId(prefId);
+        final Task savedTask = manager.getTaskId(taskFirsId);
 
         Task task2 = new Task("A", "Eat Snicker");
-
         final int taskId = manager.addNewTask(task2);
         final Task savedTask2 = manager.getTaskId(taskId);
 
@@ -84,10 +78,8 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldImmutabilityOfTaskAddInManager() {
-        Task task = new Task("A", "Eat Snicker");
-
+        Task task = new Task("Задача номер 2", "Задача номер 2");
         final int taskId = manager.addNewTask(task);
-
         final Task savedTask = manager.getTaskId(taskId);
 
         assertEquals(task.getName(), savedTask.getName(), "Наименование задачь должны совпадать");
@@ -118,7 +110,6 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("Test №1", "Description №1");
         final int epicId = manager.addNewEpic(epic);
 
-
         Subtask subtaskTestNumber1 = new Subtask("Test №1", "Description №1", epicId);
         final int subtaskId = manager.addNewSubtask(subtaskTestNumber1);
 
@@ -126,8 +117,6 @@ class InMemoryTaskManagerTest {
 
         Subtask subtaskTestNumber2 = new Subtask("Test №2", "Description №2", epicId);
         final int subtaskId2 = manager.addNewSubtask(subtaskTestNumber2);
-
-        Assertions.assertNotEquals(subtaskId, subtaskId2, "Задачи равны");
 
         System.out.println(manager.allListSubtaskByEpic(epicId));
 
@@ -138,9 +127,8 @@ class InMemoryTaskManagerTest {
 
         System.out.println(manager.allListSubtaskByEpic(epicId));
 
+        Assertions.assertNotEquals(subtaskId, subtaskId2, "Задачи равны");
         Assertions.assertNotEquals(subtaskId3, subtaskId, "Подзадача хранит один и тот же ID");
-
-
     }
 
     @Test
@@ -189,5 +177,4 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(Status.IN_PROGRESS, manager.getEpicId(epicId).getStatus());
     }
-
 }

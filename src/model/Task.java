@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Task {
     protected int id;
+    protected TypeTask type;
     protected String name;
     protected Status status;
     protected String description;
@@ -45,15 +46,8 @@ public class Task {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id == task.id &&
-                Objects.equals(name, task.name) &&
-                status == task.status &&
-                Objects.equals(description, task.description);
+    public void setTypeTask(TypeTask type) {
+        this.type = type;
     }
 
     @Override
@@ -74,4 +68,15 @@ public class Task {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id
+                && type == task.type
+                && Objects.equals(name, task.name)
+                && status == task.status
+                && Objects.equals(description, task.description);
+    }
 }
