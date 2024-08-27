@@ -29,6 +29,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 String[] splitLine = line.split(",");
 
                 TypeTask type = TypeTask.valueOf(splitLine[1]);
+<<<<<<< HEAD
+
+=======
+<<<<<<< HEAD
+>>>>>>> 095d9193a2e27797bb8e58dce86bb8d30a9906e9
+                switch (type) {
+                    case TASK:
+                        CVSTaskFormat.taskFromString(line);
+                        break;
+                    case EPIC:
+                        CVSTaskFormat.epicFromString(line);
+                        break;
+                    case SUBTASK:
+                        CVSTaskFormat.subtaskFromString(line);
+                        break;
+                    default:
+                        throw new ManagerSaveException("Неизвестный тип" + type);
+                }
+<<<<<<< HEAD
 
                 switch (type) {
                     case TASK:
@@ -44,20 +63,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         throw new ManagerSaveException("Неизвестный тип" + type);
                 }
 
-                switch (type) {
-                    case TASK:
-                        CVSTaskFormat.taskFromString(line);
-                        break;
-                    case EPIC:
-                        CVSTaskFormat.epicFromString(line);
-                        break;
-                    case SUBTASK:
-                        CVSTaskFormat.subtaskFromString(line);
-                        break;
-                    default:
-                        throw new ManagerSaveException("Неизвестный тип" + type);
-                }
-
+=======
+=======
+                    switch (type) {
+                        case TASK:
+                            CVSTaskFormat.taskFromString(line);
+                            break;
+                        case EPIC:
+                            CVSTaskFormat.epicFromString(line);
+                            break;
+                        case SUBTASK:
+                            CVSTaskFormat.subtaskFromString(line);
+                            break;
+                        default:
+                            throw new ManagerSaveException("Неизвестный тип" + type);
+                    }
+>>>>>>> c3219c3832d27f7fc6a73153f760e57e3b25130a
+>>>>>>> 095d9193a2e27797bb8e58dce86bb8d30a9906e9
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при чтении задач", e);
@@ -220,8 +242,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public String toString() {
         return "FileBackedTaskManager{" +
                 "tasks=" + getTasks() +
+<<<<<<< HEAD
                 ", epics=" + getEpics() +
                 ", epics=" + getEpics() +
+=======
+<<<<<<< HEAD
+                ", epics=" + getEpics() +
+=======
+                ", epics=" + getEpics()+
+>>>>>>> c3219c3832d27f7fc6a73153f760e57e3b25130a
+>>>>>>> 095d9193a2e27797bb8e58dce86bb8d30a9906e9
                 ", subtasks=" + getSubtask() +
                 '}';
     }
