@@ -18,6 +18,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public static FileBackedTaskManager loadFromFile(File file) {
         final FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
+        if (file.length() == 0) {
+            return manager;
+        }
+
         try (BufferedReader readFromLine = new BufferedReader(new FileReader(file))) {
 
             String line;
