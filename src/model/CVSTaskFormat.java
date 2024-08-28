@@ -2,8 +2,15 @@ package model;
 
 public class CVSTaskFormat {
 
+    public static String capitalize(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase();
+    }
+
     public static String toString(Task task) {
-        return task.getId() + "," + TypeTask.TASK + "," + task.getName() + "," + task.getStatus() + ","
+        return task.getId() + "," + TypeTask.TASK + "," + task.getName() + "," + (task.getStatus() != null ? task.getStatus() : "NEW") + ","
                 + task.getDescription();
     }
 
@@ -22,9 +29,9 @@ public class CVSTaskFormat {
 
         int id = Integer.parseInt(split[0]);
         TypeTask type = TypeTask.valueOf(split[1]);
-        String name = split[2].toUpperCase();
+        String name = capitalize(split[2].toUpperCase());
         Status status = Status.valueOf(split[3]);
-        String description = split[4].toUpperCase();
+        String description = capitalize(split[4].toUpperCase());
 
         Task taskForTxtFile = new Task(name, description);
 
@@ -40,9 +47,9 @@ public class CVSTaskFormat {
 
         int id = Integer.parseInt(split[0]);
         TypeTask type = TypeTask.valueOf(split[1]);
-        String name = split[2].toUpperCase();
+        String name = capitalize(split[2].toUpperCase());
         Status status = Status.valueOf(split[3]);
-        String description = split[4].toUpperCase();
+        String description = capitalize(split[4].toUpperCase());
 
         Epic epicForTxtFile = new Epic(name, description);
 
@@ -56,15 +63,11 @@ public class CVSTaskFormat {
     public static Subtask subtaskFromString(String value) {
         String[] split = value.split(",");
 
-        if (split.length != 6) {
-            throw new IllegalArgumentException("Invalid format for Subtask: " + value);
-        }
-
         int id = Integer.parseInt(split[0]);
         TypeTask type = TypeTask.valueOf(split[1]);
-        String name = split[2].toUpperCase();
+        String name = capitalize(split[2].toUpperCase());
         Status status = Status.valueOf(split[3]);
-        String description = split[4].toUpperCase();
+        String description = capitalize(split[4].toUpperCase());
         int epicId = Integer.parseInt(split[5]);
 
         Subtask subtaskForTxtFile = new Subtask(name, description, epicId);
