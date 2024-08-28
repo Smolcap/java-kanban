@@ -94,9 +94,9 @@ class FileBackedTaskManagerTest {
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
 
-        List<Task> loadedTasks = loadedTaskManager.getTasks();
-        List<Epic> loadedEpics = loadedTaskManager.getEpics();
-        List<Subtask> loadedSubtask = loadedTaskManager.getSubtask();
+        List<Task> loadedTasks = manager.getTasks();
+        List<Epic> loadedEpics = manager.getEpics();
+        List<Subtask> loadedSubtask = manager.getSubtask();
 
         Assertions.assertEquals(1, loadedTasks.size(), "Количество загружаемых задач " +
                 "должно быть 1");
