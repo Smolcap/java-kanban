@@ -10,7 +10,7 @@ public class CVSTaskFormat {
     }
 
     public static String toString(Task task) {
-        return task.getId() + "," + TypeTask.TASK + "," + task.getName() + "," + (task.getStatus() != null ? task.getStatus() : "NEW") + ","
+        return task.getId() + "," + TypeTask.TASK + "," + task.getName() + "," + task.getStatus() + ","
                 + task.getDescription();
     }
 
@@ -30,53 +30,36 @@ public class CVSTaskFormat {
         int id = Integer.parseInt(split[0]);
         TypeTask type = TypeTask.valueOf(split[1]);
         String name = capitalize(split[2].toUpperCase());
-        Status status = Status.valueOf(split[3]);
+        Status status = Status.valueOf(split[3].trim());
         String description = capitalize(split[4].toUpperCase());
+        Integer epicId = null;
 
-        Task taskForTxtFile = new Task(name, description);
+        if(split.length > 5) {
+            if(!split[5].isEmpty()) {
+                 epicId = Integer.parseInt(split[5]);
+            }
+        }
 
-        taskForTxtFile.setId(id);
-        taskForTxtFile.setTypeTask(type);
-        taskForTxtFile.setStatus(status);
-
-        return taskForTxtFile;
-    }
-
-    public static Epic epicFromString(String value) {
-        String[] split = value.split(",");
-
-        int id = Integer.parseInt(split[0]);
-        TypeTask type = TypeTask.valueOf(split[1]);
-        String name = capitalize(split[2].toUpperCase());
-        Status status = Status.valueOf(split[3]);
-        String description = capitalize(split[4].toUpperCase());
-
-        Epic epicForTxtFile = new Epic(name, description);
-
-        epicForTxtFile.setId(id);
-        epicForTxtFile.setTypeTask(type);
-        epicForTxtFile.setStatus(status);
-
-        return epicForTxtFile;
-    }
-
-    public static Subtask subtaskFromString(String value) {
-        String[] split = value.split(",");
-
-        int id = Integer.parseInt(split[0]);
-        TypeTask type = TypeTask.valueOf(split[1]);
-        String name = capitalize(split[2].toUpperCase());
-        Status status = Status.valueOf(split[3]);
-        String description = capitalize(split[4].toUpperCase());
-        int epicId = Integer.parseInt(split[5]);
-
-        Subtask subtaskForTxtFile = new Subtask(name, description, epicId);
-
-        subtaskForTxtFile.setId(id);
-        subtaskForTxtFile.setTypeTask(type);
-        subtaskForTxtFile.setStatus(status);
-        subtaskForTxtFile.setEpicId(epicId);
-
-        return subtaskForTxtFile;
+        switch(type) {
+            case TASK:
+                Task task = new Task (name, description);
+                task.setId(id);
+                task.setStatus(status);
+                return task;
+            case EPIC:
+                Epic epic = new Epic(name,description);
+                epic.setId(id);
+                epic.setStatus(status);
+                return epic;
+            case SUBTASK:
+                if(epicId == null) {
+                    throw new ManagerSaveException("Эпик Id не указан для подзадачи" + value);
+                }
+                Subtask subtask = new Subtask(name,description, epicId);
+                subtask.setId(id);
+                subtask.setStatus(status);
+                return subtask;
+            default: throw new ManagerSaveException("Неизвестный тип" + type);
+        }
     }
 }

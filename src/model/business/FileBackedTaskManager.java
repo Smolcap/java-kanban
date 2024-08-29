@@ -4,8 +4,9 @@ import model.*;
 
 import java.io.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Objects;
+
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private File file;
@@ -18,36 +19,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public static FileBackedTaskManager loadFromFile(File file) {
         final FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
-        if (file.length() == 0) {
-            return manager;
-        }
+        try (BufferedReader readFromLine = new BufferedReader(new FileReader(file,StandardCharsets.UTF_8))) {
+            readFromLine.readLine();
 
-        try (BufferedReader readFromLine = new BufferedReader(new FileReader(file))) {
+          while (readFromLine.ready()) {
+              String line = readFromLine.readLine();
 
-            String line;
-            while ((line = readFromLine.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
+              if (line.trim().isEmpty()) {
+                  continue;
+              }
 
-                String[] splitLine = line.split(",");
-
-                TypeTask type = TypeTask.valueOf(splitLine[1]);
-
-                switch (type) {
-                    case TASK:
-                        CVSTaskFormat.taskFromString(line);
-                        break;
-                    case EPIC:
-                        CVSTaskFormat.epicFromString(line);
-                        break;
-                    case SUBTASK:
-                        CVSTaskFormat.subtaskFromString(line);
-                        break;
-                    default:
-                        throw new ManagerSaveException("Неизвестный тип" + type);
-                }
-            }
+              CVSTaskFormat.taskFromString(line);
+          }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при чтении задач", e);
         }
@@ -55,11 +38,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public void save() {
-        if (getTasks().isEmpty() && getEpics().isEmpty() && getSubtask().isEmpty()) {
-            return;
-        }
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
+            bufferedWriter.write("id,type,name,status,description, epicId");
+            bufferedWriter.newLine();
 
             for (Task task : getTasks()) {
                 bufferedWriter.write(CVSTaskFormat.toString(task));
@@ -189,32 +170,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public void removeBySubtaskId(int subtaskId) {
         super.removeBySubtaskId(subtaskId);
         save();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileBackedTaskManager that = (FileBackedTaskManager) o;
-
-
-        return Objects.equals(getTasks(), that.getTasks()) &&
-                Objects.equals(getEpics(), that.getEpics()) &&
-                Objects.equals(getSubtask(), that.getSubtask());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getTasks(), getEpics(), getSubtask());
-    }
-
-    @Override
-    public String toString() {
-        return "FileBackedTaskManager{" +
-                "tasks=" + getTasks() +
-                ", epics=" + getEpics() +
-                ", subtasks=" + getSubtask() +
-                '}';
     }
 }

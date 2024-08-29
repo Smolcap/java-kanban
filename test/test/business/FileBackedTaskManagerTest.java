@@ -60,7 +60,7 @@ class FileBackedTaskManagerTest {
         Task task2 = new Task("Задача номер 8", "Описание к задаче номер 8");
         final int taskId2 = manager.addNewTask(task2);
         final Task savedTask2 = manager.getTaskId(taskId2);
-        task.setStatus(Status.IN_PROGRESS);
+        task2.setStatus(Status.NEW);
 
         manager.save();
 
@@ -109,5 +109,23 @@ class FileBackedTaskManagerTest {
         assertEquals("Задача номер 7", loadedTasks.get(0).getName());
         assertEquals("Эпик номер 8", loadedEpics.get(0).getName());
         assertEquals("Подзадача номер 9", loadedSubtask.get(0).getName());
+
+    }
+
+    @Test
+    public void shouldSaveAndRecoverySerialization() {
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
+
+        Task task10 = new Task("Задача номер 10", "Описание к задаче номер 10");
+        final int taskId = manager.addNewTask(task10);
+        final Task savedTask = manager.getTaskId(taskId);
+        task10.setStatus(Status.IN_PROGRESS);
+
+        fileBackedTaskManager.save();
+        Assertions.assertEquals(manager.getTasks().size(),fileBackedTaskManager.getTasks().size(), "Задача " +
+                "должна быть одна");
+
+
+
     }
 }
