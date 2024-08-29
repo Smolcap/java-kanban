@@ -82,13 +82,32 @@ class FileBackedTaskManagerTest {
         final Task savedTask = manager.getTaskId(taskId);
         task.setStatus(Status.IN_PROGRESS);
 
+        Epic epic = new Epic("Эпик номер 25", "Описание к Эпику номер 8");
+        final int epicId = manager.addNewEpic(epic);
+        final Epic savedEpic = manager.getEpicId(epicId);
+        final ArrayList<Epic> epics = manager.getEpics();
+        epic.setStatus(Status.NEW);
+
+        Subtask subtask = new Subtask("Подзадача номер 9", "Подзадача номер 9", epicId);
+        final int subtaskId = manager.addNewSubtask(subtask);
+        final Subtask savedSubtask = manager.getSubtaskId(subtaskId);
+        subtask.setStatus(Status.NEW);
+
         manager.save();
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
 
         List<Task> loadedTasks = loadedTaskManager.getTasks();
+        List<Epic> loadedEpics = loadedTaskManager.getEpics();
+        List<Subtask> loadedSubtask = loadedTaskManager.getSubtask();
 
         Assertions.assertEquals(1, loadedTasks.size(), "Количество загружаемых задач " +
+                "должно быть 1");
+
+        Assertions.assertEquals(1, loadedEpics.size(), "Количество загружаемых задач " +
+                "должно быть 1");
+
+        Assertions.assertEquals(1, loadedSubtask.size(), "Количество загружаемых задач " +
                 "должно быть 1");
     }
 
