@@ -122,9 +122,8 @@ class FileBackedTaskManagerTest {
         task10.setStatus(Status.IN_PROGRESS);
 
         fileBackedTaskManager.save();
-        Assertions.assertEquals(manager.getTasks().size(),fileBackedTaskManager.getTasks().size(), "Задача " +
+        Assertions.assertEquals(manager.getTasks().size(), fileBackedTaskManager.getTasks().size(), "Задача " +
                 "должна быть одна");
-
 
 
     }

@@ -34,32 +34,33 @@ public class CVSTaskFormat {
         String description = capitalize(split[4].toUpperCase());
         Integer epicId = null;
 
-        if(split.length > 5) {
-            if(!split[5].isEmpty()) {
-                 epicId = Integer.parseInt(split[5]);
+        if (split.length > 5) {
+            if (!split[5].isEmpty()) {
+                epicId = Integer.parseInt(split[5]);
             }
         }
 
-        switch(type) {
+        switch (type) {
             case TASK:
-                Task task = new Task (name, description);
+                Task task = new Task(name, description);
                 task.setId(id);
                 task.setStatus(status);
                 return task;
             case EPIC:
-                Epic epic = new Epic(name,description);
+                Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(status);
                 return epic;
             case SUBTASK:
-                if(epicId == null) {
+                if (epicId == null) {
                     throw new ManagerSaveException("Эпик Id не указан для подзадачи" + value);
                 }
-                Subtask subtask = new Subtask(name,description, epicId);
+                Subtask subtask = new Subtask(name, description, epicId);
                 subtask.setId(id);
                 subtask.setStatus(status);
                 return subtask;
-            default: throw new ManagerSaveException("Неизвестный тип" + type);
+            default:
+                throw new ManagerSaveException("Неизвестный тип" + type);
         }
     }
 }
