@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -85,13 +86,13 @@ class FileBackedTaskManagerTest {
         final int epicId = manager.addNewEpic(epic);
         final Epic savedEpic = manager.getEpicId(epicId);
         final ArrayList<Epic> epics = manager.getEpics();
-        epic.setStatus(Status.IN_PROGRESS);
+        epic.setStatus(Status.NEW);
 
         Subtask subtask = new Subtask("Подзадача номер 9", "Подзадача номер 9", epicId);
         final int subtaskId = manager.addNewSubtask(subtask);
         final Subtask savedSubtask = manager.getSubtaskId(subtaskId);
         subtask.setStatus(Status.NEW);
-
+        
         manager.save();
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
@@ -111,7 +112,6 @@ class FileBackedTaskManagerTest {
         assertEquals("Задача номер 7", loadedTasks.get(0).getName());
         assertEquals("Эпик номер 8", loadedEpics.get(0).getName());
         assertEquals("Подзадача номер 9", loadedSubtask.get(0).getName());
-
     }
 
     @Test
@@ -126,7 +126,6 @@ class FileBackedTaskManagerTest {
         fileBackedTaskManager.save();
         Assertions.assertEquals(manager.getTasks().size(), fileBackedTaskManager.getTasks().size(), "Задача " +
                 "должна быть одна");
-
 
     }
 }
