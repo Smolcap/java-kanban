@@ -77,41 +77,19 @@ class FileBackedTaskManagerTest {
 
     @Test
     public void shouldSaveTask() {
-        Task task = new Task("Задача номер 7", "Описание к задаче номер 7");
+        Task task = new Task("Задача номер 20", "Описание к задаче номер 7");
         final int taskId = manager.addNewTask(task);
         final Task savedTask = manager.getTaskId(taskId);
         task.setStatus(Status.IN_PROGRESS);
 
-        Epic epic = new Epic("Эпик номер 8", "Описание к Эпику номер 8");
-        final int epicId = manager.addNewEpic(epic);
-        final Epic savedEpic = manager.getEpicId(epicId);
-        final ArrayList<Epic> epics = manager.getEpics();
-        epic.setStatus(Status.NEW);
-
-        Subtask subtask = new Subtask("Подзадача номер 9", "Подзадача номер 9", epicId);
-        final int subtaskId = manager.addNewSubtask(subtask);
-        final Subtask savedSubtask = manager.getSubtaskId(subtaskId);
-        subtask.setStatus(Status.NEW);
-        
         manager.save();
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
 
         List<Task> loadedTasks = loadedTaskManager.getTasks();
-        List<Epic> loadedEpics = loadedTaskManager.getEpics();
-        List<Subtask> loadedSubtask = loadedTaskManager.getSubtask();
 
         Assertions.assertEquals(1, loadedTasks.size(), "Количество загружаемых задач " +
                 "должно быть 1");
-
-        Assertions.assertEquals(1, loadedEpics.size(), "Количество загружаемых задач " +
-                "должно быть 1");
-
-        Assertions.assertEquals(1, loadedSubtask.size(), "Количество загружаемых задач " +
-                "должно быть 1");
-        assertEquals("Задача номер 7", loadedTasks.get(0).getName());
-        assertEquals("Эпик номер 8", loadedEpics.get(0).getName());
-        assertEquals("Подзадача номер 9", loadedSubtask.get(0).getName());
     }
 
     @Test

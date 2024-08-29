@@ -35,7 +35,7 @@ public class CVSTaskFormat {
         Status status = Status.NEW;
 
         try {
-            status = Status.valueOf(statusString);
+            status = Status.valueOf(statusString.trim().toUpperCase());
         } catch (ManagerSaveException e) {
             throw new ManagerSaveException("Неверный статус" + status);
         }
