@@ -30,7 +30,16 @@ public class CVSTaskFormat {
         int id = Integer.parseInt(split[0]);
         TypeTask type = TypeTask.valueOf(split[1]);
         String name = capitalize(split[2].toUpperCase());
-        Status status = Status.valueOf(split[3].trim());
+        String statusString = split[3].trim();
+
+        Status status = Status.NEW;
+
+        try{
+            status = Status.valueOf(statusString);
+        }catch (ManagerSaveException e) {
+            throw new ManagerSaveException("Неверный статус" + status);
+        }
+
         String description = capitalize(split[4].toUpperCase());
         Integer epicId = null;
 

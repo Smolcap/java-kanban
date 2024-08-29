@@ -38,7 +38,9 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void shouldSaveNullFile() throws IOException {
+    public void shouldSaveNullFile() {
+        assertTrue(tempFile.length() == 0, "Файл должен быть пустым");
+
         manager = FileBackedTaskManager.loadFromFile(tempFile);
 
         assertTrue(manager.getTasks().isEmpty(), "Менеджер задач не должен " +
