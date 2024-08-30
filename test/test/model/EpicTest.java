@@ -18,7 +18,7 @@ class EpicTest {
 
     @Test
     public void shouldNotAddEpicYourselfOfSubtask() {
-        Epic epicTestNumberThree = new Epic("Test №", "Open a chocolate ");
+        Epic epicTestNumberThree = new Epic("Test №", "Open a chocolate.");
         final int epicIdForEpicTest = manager.addNewEpic(epicTestNumberThree);
         final Epic savedEpic = manager.getEpicId(epicIdForEpicTest);
 
