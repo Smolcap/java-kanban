@@ -30,46 +30,49 @@ public class CVSTaskFormat {
         int id = Integer.parseInt(split[0]);
         TypeTask type = TypeTask.valueOf(split[1]);
         String name = capitalize(split[2].toUpperCase());
-        String statusString = split[3].trim();
-
-        Status status = Status.NEW;
-
-        try {
-            status = Status.valueOf(statusString.trim().toUpperCase());
-        } catch (ManagerSaveException e) {
-            throw new ManagerSaveException("Неверный статус" + status);
-        }
-
+        Status status = Status.valueOf(split[3].trim());
         String description = capitalize(split[4].toUpperCase());
-        Integer epicId = null;
 
-        if (split.length > 5) {
-            if (!split[5].isEmpty()) {
-                epicId = Integer.parseInt(split[5]);
-            }
-        }
+        Task task = new Task(name, description);
+        task.setId(id);
+        task.setStatus(status);
 
-        switch (type) {
-            case TASK:
-                Task task = new Task(name, description);
-                task.setId(id);
-                task.setStatus(status);
-                return task;
-            case EPIC:
-                Epic epic = new Epic(name, description);
-                epic.setId(id);
-                epic.setStatus(status);
-                return epic;
-            case SUBTASK:
-                if (epicId == null) {
-                    throw new ManagerSaveException("Эпик Id не указан для подзадачи" + value);
-                }
-                Subtask subtask = new Subtask(name, description, epicId);
-                subtask.setId(id);
-                subtask.setStatus(status);
-                return subtask;
-            default:
-                throw new ManagerSaveException("Неизвестный тип" + type);
-        }
+        return task;
+    }
+
+
+    public static Epic epicFromString(String value) {
+        String[] split = value.split(",");
+
+        int id = Integer.parseInt(split[0]);
+        TypeTask type = TypeTask.valueOf(split[1]);
+        String name = capitalize(split[2].toUpperCase());
+        Status status = Status.valueOf(split[3].trim());
+        String description = capitalize(split[4].toUpperCase());
+
+        Epic epic = new Epic(name, description);
+        epic.setId(id);
+        epic.setStatus(status);
+
+        return epic;
+    }
+
+    public static Subtask subtaskFromString(String value) {
+        String[] split = value.split(",");
+
+        int id = Integer.parseInt(split[0]);
+        TypeTask type = TypeTask.valueOf(split[1]);
+        String name = capitalize(split[2].toUpperCase());
+        Status status = Status.valueOf(split[3].trim());
+        String description = capitalize(split[4].toUpperCase());
+        int epicId = Integer.parseInt(split[5]);
+
+        Subtask subtask = new Subtask(name, description, epicId);
+        subtask.setId(id);
+        subtask.setStatus(status);
+
+        return subtask;
     }
 }
+
+

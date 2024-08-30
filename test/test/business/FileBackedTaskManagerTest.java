@@ -4,18 +4,16 @@ import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
-import model.business.*;
+import model.business.FileBackedTaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,7 +38,7 @@ class FileBackedTaskManagerTest {
 
     @Test
     public void shouldSaveNullFile() {
-        assertTrue(tempFile.length() == 0, "Файл должен быть пустым");
+        assertEquals(0, tempFile.length(), "Файл должен быть пустым");
 
         manager = FileBackedTaskManager.loadFromFile(tempFile);
 
@@ -121,7 +119,9 @@ class FileBackedTaskManagerTest {
         task10.setStatus(Status.IN_PROGRESS);
 
         fileBackedTaskManager.save();
-        Assertions.assertEquals(manager.getTasks().size(), fileBackedTaskManager.getTasks().size(), "Задача " +
+
+        FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(tempFile);
+        Assertions.assertEquals(fileBackedTaskManager1.getTasks().size(), fileBackedTaskManager.getTasks().size(), "Задача " +
                 "должна быть одна");
 
     }

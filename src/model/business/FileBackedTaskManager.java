@@ -6,7 +6,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private File file;
 
@@ -31,9 +30,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 if (line.trim().isEmpty()) {
                     continue;
                 }
+                String[] split = line.split(",");
+                TypeTask type = TypeTask.valueOf(split[1].trim());
 
-                CVSTaskFormat.taskFromString(line);
-                System.out.println(line);
+                switch (type) {
+                    case TASK:
+                        Task task = CVSTaskFormat.taskFromString(line);
+                        manager.addNewTask(task);
+                        break;
+                    case EPIC:
+                        Epic epic = CVSTaskFormat.epicFromString(line);
+                        manager.addNewEpic(epic);
+                        break;
+                    case SUBTASK:
+                        Subtask subtask = CVSTaskFormat.subtaskFromString(line);
+                        manager.addNewSubtask(subtask);
+                        break;
+                }
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при чтении задач", e);
