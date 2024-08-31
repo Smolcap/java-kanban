@@ -1,4 +1,4 @@
-package test.business;
+package business;
 
 import model.Epic;
 import model.Status;
