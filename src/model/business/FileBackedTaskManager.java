@@ -31,7 +31,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     case TASK:
                         Task task = CVSTaskFormat.taskFromString(line);
                         manager.addNewTask(task);
-                        System.out.println(line);
                         break;
                     case EPIC:
                         Epic epic = CVSTaskFormat.epicFromString(line);
@@ -78,12 +77,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Integer addNewTask(Task task) {
+        if (task == null) {
+            throw new ManagerSaveException("Пустая задача");
+        }
+
         Integer taskId = super.addNewTask(task);
         save();
         return taskId;
     }
 
     public Integer addNewEpic(Epic epic) {
+        if (epic == null) {
+            throw new ManagerSaveException("Пустой эпик");
+        }
+
         Integer epicId = super.addNewEpic(epic);
         save();
         return epicId;
@@ -91,6 +98,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Integer addNewSubtask(Subtask subtask) {
+        if (subtask == null) {
+            throw new ManagerSaveException("Пустая подзадача");
+        }
+
         Integer subtaskId = super.addNewSubtask(subtask);
         save();
         return subtaskId;
