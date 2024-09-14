@@ -13,16 +13,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class InMemoryTaskManagerTest {
-    InMemoryTaskManager manager;
+class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+
     InMemoryHistoryManager inMemoryHistoryManager;
 
     @BeforeEach
+    @Override
     public void setUp() {
         manager = new InMemoryTaskManager(Managers.getDefaultHistory());
         inMemoryHistoryManager = new InMemoryHistoryManager();
@@ -186,8 +189,36 @@ class InMemoryTaskManagerTest {
         subtask2.setStatus(Status.DONE);
 
         manager.updateEpicStatus(epicId);
-
-        Assertions.assertEquals(Status.IN_PROGRESS, manager.getEpicId(epicId).getStatus());
+        Assertions.assertEquals(Status.IN_PROGRESS, epic.getStatus());
     }
 
+    @Test
+    public void shouldTheIntersectionOfIntervals() {
+        Epic epic1 = new Epic("Epic 1", "Description 1");
+        int epicId1 = manager.addNewEpic(epic1);
+
+        Subtask subtask1 = new Subtask("Subtask 1", "Description 1", epicId1);
+        subtask1.setStartTime(LocalDateTime.of(2024, 9, 12, 10, 5));
+        subtask1.setDuration(Duration.ofMinutes(10));
+        int subtaskId1 = manager.addNewSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask("Subtask 2", "Description 2", epicId1);
+        subtask2.setStartTime(LocalDateTime.of(2024, 9, 12, 10, 30));
+        subtask2.setDuration(Duration.ofMinutes(10));
+        int subtaskId2 = manager.addNewSubtask(subtask2);
+
+        System.out.println("Epic Start: " + epic1.getStartTime());
+        System.out.println("Epic End: " + epic1.getEndTime());
+        System.out.println("Subtask Start: " + subtask1.getStartTime());
+        System.out.println("Subtask End: " + subtask1.getEndTime());
+
+        Assertions.assertTrue(manager.validationByIntersection(epic1, subtask1),
+                "Epic и первая подзадача должны пересекаться");
+
+        Assertions.assertFalse(manager.validationByIntersection(epic1, subtask2),
+                "Epic и подзадача 2 не должны пересекаться");
+
+        Assertions.assertTrue(manager.validationByIntersection(epic1, epic1),
+                "Epic должен пересекаться сам с собой");
+    }
 }

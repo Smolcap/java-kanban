@@ -39,10 +39,14 @@ public class Subtask extends Task {
         return "Subtask{" +
                 "epicId=" + epicId +
                 ", type=" + type +
+                ", startTime=" + startTime +
                 ", status=" + status +
                 ", name='" + name + '\'' +
                 ", id=" + id +
+                ", duration=" + duration +
                 ", description='" + description + '\'' +
                 '}';
     }
 }
+
+

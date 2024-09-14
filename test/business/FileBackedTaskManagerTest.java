@@ -4,10 +4,7 @@ import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
-import model.business.FileBackedTaskManager;
-import model.business.HistoryManager;
-import model.business.InMemoryHistoryManager;
-import model.business.Managers;
+import model.business.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,12 +17,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     InMemoryHistoryManager inMemoryHistoryManager;
-    FileBackedTaskManager manager;
     File tempFile;
 
     @BeforeEach
+    @Override
     public void setUp() throws IOException {
         tempFile = File.createTempFile("tempTaskManager", ".txt");
         tempFile.deleteOnExit();
@@ -41,6 +38,15 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
+    public void shouldThrowExceptionWhenLoadingFromInvalidFile() {
+        File invalidFile = new File("invalid_file.csv");
+
+        Assertions.assertThrows(ManagerSaveException.class, () -> {
+            FileBackedTaskManager.loadFromFile(invalidFile);
+        }, "Должно выбросить исключение при загрузке из недоступного файла");
+    }
+
+    @Test
     public void shouldSaveNullFile() {
         manager.save();
         FileBackedTaskManager loadFromFile = FileBackedTaskManager.loadFromFile(tempFile);
@@ -51,28 +57,34 @@ class FileBackedTaskManagerTest {
                 "содержать записи после загрузки из пустого файла");
         Assertions.assertTrue(loadFromFile.getSubtask().isEmpty(), "Менеджер подзадач не должен" +
                 " содержать записи после загрузки из пустого файла");
-
     }
 
     @Test
     public void shouldSaveAndLoadTasks() {
         Task task = new Task("Задача номер 20", "Описание к задаче номер 7");
         final int taskId = manager.addNewTask(task);
-        final Task savedTask = manager.getTaskId(taskId);
         task.setStatus(Status.IN_PROGRESS);
+
+        Task task2 = new Task("Задача номер 22", "Описание к задаче номер 7");
+        final int taskId2 = manager.addNewTask(task2);
+        task2.setStatus(Status.IN_PROGRESS);
+
 
         Epic epic = new Epic("Эпик номер 25", "Описание к Эпику номер 8");
         final int epicId = manager.addNewEpic(epic);
-        final Epic savedEpic = manager.getEpicId(epicId);
-        final ArrayList<Epic> epics = manager.getEpics();
-        epic.setStatus(Status.NEW);
+        epic.setStatus(Status.IN_PROGRESS);
 
-        Subtask subtask = new Subtask("Подзадача номер 9", "Подзадача номер 9", epicId);
+
+        Assertions.assertNotNull(manager.getEpicId(epicId), "Эпик должен быть добавлен.");
+
+
+        Subtask subtask = new Subtask("Подзадача номер 9", "Описание подзадачи номер 9", epicId);
         final int subtaskId = manager.addNewSubtask(subtask);
-        final Subtask savedSubtask = manager.getSubtaskId(subtaskId);
+        Assertions.assertTrue(subtaskId > 0, "ID подзадачи должен быть больше нуля.");
         subtask.setStatus(Status.NEW);
 
         manager.save();
+
 
         FileBackedTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(tempFile);
 
@@ -80,7 +92,7 @@ class FileBackedTaskManagerTest {
         List<Epic> loadedEpics = loadedTaskManager.getEpics();
         List<Subtask> loadedSubtask = loadedTaskManager.getSubtask();
 
-        Assertions.assertEquals(1, loadedTasks.size(), "Количество загружаемых задач " +
+        Assertions.assertEquals(2, loadedTasks.size(), "Количество загружаемых задач " +
                 "должно быть 1");
 
         Assertions.assertEquals(1, loadedEpics.size(), "Количество загружаемых задач " +
@@ -147,7 +159,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void shouldTasksWithSpecifiedIdAndGeneratedIdDoNotConflictWithTheManagershouldTasksWithSpecifiedIdAndGeneratedIdDoNotConflictWithTheManager() {
+    public void shouldTasksWithSpecifiedIdAndGeneratedIdDoNotConflictWithTheManagers() {
         Task task = new Task("Здача номер 3", "Задача с описанием номер 3");
         final int taskFirsId = manager.addNewTask(task);
         final Task savedTask = manager.getTaskId(taskFirsId);
@@ -182,7 +194,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void shouldNotStoreOldIDsInsideThemselvesDeletedSubtasksshouldNotStoreOldIDsInsideThemselvesDeletedSubtasks() {
+    public void shouldNotStoreOldIDsInsideThemselvesDeletedSubtasks() {
         Epic epic = new Epic("Test №1", "Description №1");
         final int epicId = manager.addNewEpic(epic);
 

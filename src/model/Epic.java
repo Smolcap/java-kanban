@@ -1,15 +1,30 @@
 package model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
 
-    protected ArrayList<Integer> subtaskId = new ArrayList<>();
+    protected List<Integer> subtaskId = new ArrayList<>();
+    protected LocalDateTime endTime;
+
 
     public Epic(String name, String description) {
         super(name, description);
         this.type = TypeTask.EPIC;
+        this.status = Status.NEW;
+        this.endTime = startTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public int getEpic(Subtask subtask) {
@@ -24,7 +39,7 @@ public class Epic extends Task {
         subtaskId.clear();
     }
 
-    public ArrayList<Integer> getSubtaskId() {
+    public List<Integer> getSubtaskId() {
         return subtaskId;
     }
 
@@ -38,7 +53,8 @@ public class Epic extends Task {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        return Objects.equals(subtaskId, epic.subtaskId);
+        return Objects.equals(subtaskId, epic.subtaskId) &&
+                Objects.equals(endTime, epic.endTime);
     }
 
     @Override
@@ -46,14 +62,16 @@ public class Epic extends Task {
         return Objects.hash(super.hashCode(), subtaskId);
     }
 
-
     @Override
     public String toString() {
         return "Epic{" +
                 "subtaskId=" + subtaskId +
+                ", endTime=" + endTime +
                 ", description='" + description + '\'' +
+                ", duration=" + duration +
                 ", id=" + id +
                 ", name='" + name + '\'' +
+                ", startTime=" + startTime +
                 ", status=" + status +
                 ", type=" + type +
                 '}';

@@ -1,8 +1,4 @@
-
-public class Practicum {
-
+class Practicum {
     public static void main(String[] args) {
-
     }
 }
-
