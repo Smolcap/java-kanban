@@ -2,7 +2,8 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 public class Task {
     protected int id;
@@ -43,7 +44,7 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

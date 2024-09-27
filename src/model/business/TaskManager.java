@@ -5,6 +5,7 @@ import model.Subtask;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -44,4 +45,9 @@ public interface TaskManager {
 
     void removeBySubtaskId(int subtaskId);
 
+    List<Subtask> allListSubtaskByEpic(int epicId);
+
+    List<Task> getPrioritizedTasks();
+
+    boolean validationByIntersection(Task existingTask, Task newSubtask);
 }

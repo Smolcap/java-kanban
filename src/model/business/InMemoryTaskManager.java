@@ -64,8 +64,6 @@ public class InMemoryTaskManager implements TaskManager {
                 .anyMatch(createdTask -> validationByIntersection(createdTask, task));
         if (intersectionsForTask) {
             throw new ManagerSaveException("Задача пересекается с одной из существующих задач");
-        } else {
-            System.out.println("Задача успешно добавлена");
         }
     }
 
@@ -128,6 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
         final int id = ++generationId;
         task.setId(id);
         tasks.put(id, task);
+        System.out.println("Задача успешно добавлена");
         return id;
     }
 
@@ -145,7 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Integer addNewSubtask(Subtask subtask) {
         Epic epic = epics.get(subtask.getEpicId());
         if (epic == null) {
-            System.out.println("Нет такой задачи" + subtask.getEpicId());
+            throw new ManagerSaveException("Нет такого эпика" + subtask.getEpicId());
         }
         add(subtask);
         final int id = ++generationId;
@@ -161,8 +160,16 @@ public class InMemoryTaskManager implements TaskManager {
         Optional<Task> optionalUpdateTask = Optional.ofNullable(tasks.get(task.getId()));
 
         optionalUpdateTask.ifPresentOrElse(existingTask -> {
-                    removeByTaskId(task.getId());
-                    tasks.put(task.getId(), task);
+                    existingTask.setName(task.getName());
+                    existingTask.setDescription(task.getDescription());
+
+                    if (task.getStartTime() != null) {
+                        existingTask.setStartTime(task.getStartTime());
+                    }
+                    if (task.getDuration() != null) {
+                        existingTask.setDuration(task.getDuration());
+                    }
+
                     System.out.println("Задача с ID " + task.getId() + " успешно обновлена.");
                 },
                 () -> System.out.println("Задача не была обновлена"));
@@ -173,8 +180,15 @@ public class InMemoryTaskManager implements TaskManager {
         Optional<Epic> optionalUpdateEpic = Optional.ofNullable(epics.get(epic.getId()));
 
         optionalUpdateEpic.ifPresentOrElse(exsistingEpic -> {
-                    removeByEpicId(epic.getId());
-                    epics.put(epic.getId(), epic);
+                    exsistingEpic.setName(epic.getName());
+                    exsistingEpic.setDescription(epic.getDescription());
+
+                    if (epic.getStartTime() != null) {
+                        exsistingEpic.setStartTime(epic.getStartTime());
+                    }
+                    if (epic.getEndTime() != null) {
+                        exsistingEpic.setEndTime(epic.getEndTime());
+                    }
                     System.out.println("Эпик с ID " + epic.getId() + " успешно обновлен.");
                     updateEpicStatus(epic.getId());
                 },
@@ -186,8 +200,15 @@ public class InMemoryTaskManager implements TaskManager {
         Optional<Subtask> optionalUpdateSubtask = Optional.ofNullable(subtasks.get(subtask.getId()));
 
         optionalUpdateSubtask.ifPresentOrElse(exsistingSubtask -> {
-                    removeBySubtaskId(subtask.getId());
-                    subtasks.put(subtask.getId(), subtask);
+                    exsistingSubtask.setName(subtask.getName());
+                    exsistingSubtask.setDescription(subtask.getDescription());
+
+                    if (subtask.getStartTime() != null) {
+                        exsistingSubtask.setStartTime(subtask.getStartTime());
+                    }
+                    if (subtask.getDuration() != null) {
+                        exsistingSubtask.setDuration(subtask.getDuration());
+                    }
                     System.out.println("Подзадача с ID " + subtask.getId() + " успешно обновлена.");
 
                     updateEpicStatus(subtask.getEpicId());
