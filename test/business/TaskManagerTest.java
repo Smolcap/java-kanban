@@ -1,10 +1,8 @@
 package business;
 
 import model.Epic;
-
 import model.Subtask;
 import model.Task;
-
 import model.business.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
-
 
 abstract class TaskManagerTest<T extends TaskManager> {
     protected T manager;
