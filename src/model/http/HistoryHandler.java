@@ -24,11 +24,7 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
         Endpoints endpoints = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod(), resource);
 
-<<<<<<< HEAD
         if (endpoints.equals(Endpoints.GET)) {
-=======
-        if(endpoints.equals(Endpoints.GET)) {
->>>>>>> a882662777b9f388913d5ca48dafb6b5ae3003a7
             handlerGetHistory(exchange);
         }
     }
