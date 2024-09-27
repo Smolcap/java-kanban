@@ -80,8 +80,7 @@ public class HttpTaskServerTest {
     public void shouldAddEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("Test №", "Test №");
         epic.setStartTime(LocalDateTime.of(2024, 9, 12, 10, 5));
-        epic.setEndTime(LocalDateTime.of(2024, 9, 12, 10, 10));
-        final int epicId = taskManager.addNewEpic(epic);
+        epic.setEndTime(LocalDateTime.of(2024, 9, 12, 10, 19));
 
         String jsonTask = gson.toJson(epic);
 
@@ -372,7 +371,7 @@ public class HttpTaskServerTest {
         Task saveTask = taskManager.getTaskId(taskId);
 
         HttpClient httpClient = HttpClient.newHttpClient();
-        URI uri = URI.create("http://localhost:8080/tasks/1");
+        URI uri = URI.create("http://localhost:8080/tasks/" + taskId);
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(uri)
@@ -397,7 +396,7 @@ public class HttpTaskServerTest {
         final Epic saveEpic = taskManager.getEpicId(epicId);
 
         HttpClient httpClient = HttpClient.newHttpClient();
-        URI uri = URI.create("http://localhost:8080/epics/1");
+        URI uri = URI.create("http://localhost:8080/epics/" + epicId);
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(uri)

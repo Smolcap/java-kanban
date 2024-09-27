@@ -23,6 +23,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         TreeSet<Task> taskSet = tasks.values().stream()
                 .filter(Objects::nonNull)
@@ -48,7 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
         return prioritizedTasks;
     }
 
-
+    @Override
     public boolean validationByIntersection(Task existingTask, Task newSubtask) {
         LocalDateTime existingStart = existingTask.getStartTime();
         LocalDateTime existingEnd = existingStart.plus(existingTask.getDuration());
@@ -266,6 +267,7 @@ public class InMemoryTaskManager implements TaskManager {
                 () -> System.out.println("Подзадача с ID " + subtaskId + " не найдена"));
     }
 
+    @Override
     public List<Subtask> allListSubtaskByEpic(int epicId) {
         Optional<Epic> optionalSubtask = Optional.ofNullable(epics.get(epicId));
 
