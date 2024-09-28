@@ -43,7 +43,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
         Assertions.assertThrows(ManagerSaveException.class, () -> {
             FileBackedTaskManager.loadFromFile(invalidFile);
-        }, "Должно выбросить исключение при загрузке из недоступного файла");
+        }, "Должноо выбросить исключение при загрузке из недоступного файла");
     }
 
     @Test
