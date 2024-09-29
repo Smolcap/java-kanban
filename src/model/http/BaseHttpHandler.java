@@ -2,16 +2,18 @@ package model.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import model.business.TaskManager;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class BaseHttpHandler {
+public abstract class BaseHttpHandler implements HttpHandler {
     private static final int SUCCESS_CODE = 200;
     private static final int CREATE_CODE = 201;
     private static final int NOT_FOUND_CODE = 404;
+    private static final int METHOD_NOT_ALLOWED = 405;
     private static final int HAS_INTERACTIONS_CODE = 406;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
@@ -48,6 +50,10 @@ public class BaseHttpHandler {
 
     protected void sendText(HttpExchange httpExchange, String responseTextSuccess) throws IOException {
         sendResponse(httpExchange, responseTextSuccess, SUCCESS_CODE);
+    }
+
+    protected void sendMethodNotAllowed(HttpExchange httpExchange, String responseTextSuccess) throws IOException {
+        sendResponse(httpExchange, responseTextSuccess, METHOD_NOT_ALLOWED);
     }
 
     protected void sendCreate(HttpExchange httpExchange, String responseTextSuccess) throws IOException {

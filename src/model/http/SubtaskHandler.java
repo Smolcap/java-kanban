@@ -2,14 +2,13 @@ package model.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import model.Subtask;
 import model.business.TaskManager;
 
 import java.io.IOException;
 import java.util.List;
 
-public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtaskHandler extends BaseHttpHandler {
 
     public SubtaskHandler(TaskManager taskManager, Gson gson) {
         super(taskManager, gson);
@@ -27,6 +26,8 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
             case POST -> handleAddSubtask(exchange);
             case PUT_UPDATE_TASK -> handleUpdateSubtask(exchange);
             case DELETE_BY_ID -> handleDeleteSubtaskById(exchange);
+            default -> sendMethodNotAllowed(exchange, " HTTP-метод не поддерживается " +
+                    "сервером для этого ресурса");
         }
     }
 

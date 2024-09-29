@@ -2,14 +2,13 @@ package model.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import model.Task;
 import model.business.HistoryManager;
 
 import java.io.IOException;
 import java.util.List;
 
-public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler {
 
     private final HistoryManager historyManager;
 
@@ -26,6 +25,9 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
         if (endpoints.equals(Endpoints.GET)) {
             handlerGetHistory(exchange);
+        } else {
+            sendMethodNotAllowed(exchange, " HTTP-метод не поддерживается " +
+                    "сервером для этого ресурса");
         }
     }
 

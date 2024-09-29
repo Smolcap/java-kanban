@@ -2,14 +2,13 @@ package model.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import model.Task;
 import model.business.TaskManager;
 
 import java.io.IOException;
 import java.util.List;
 
-public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+public class PrioritizedHandler extends BaseHttpHandler {
 
     public PrioritizedHandler(TaskManager taskManager, Gson gson) {
         super(taskManager, gson);
@@ -22,6 +21,9 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
 
         if (endpoints.equals(Endpoints.GET)) {
             handlerGetPrioritizedTasks(exchange);
+        } else {
+            sendMethodNotAllowed(exchange, " HTTP-метод не поддерживается " +
+                    "сервером для этого ресурса");
         }
     }
 
