@@ -1,6 +1,8 @@
 package model;
 
-import java.util.Objects;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Task {
     protected int id;
@@ -8,11 +10,37 @@ public class Task {
     protected String name;
     protected Status status;
     protected String description;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.description = description;
         this.name = name;
         this.type = TypeTask.TASK;
+        this.status = Status.NEW;
+        this.duration = Duration.ZERO;
+    }
+
+    public LocalDateTime getEndTime() {
+        return Optional.ofNullable(startTime)
+                .map(start -> start.plus(duration))
+                .orElse(null);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public int getId() {
@@ -57,9 +85,12 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return id == task.id &&
+                type == task.type &&
                 Objects.equals(name, task.name) &&
                 status == task.status &&
-                Objects.equals(description, task.description);
+                Objects.equals(description, task.description) &&
+                Objects.equals(duration, task.duration) &&
+                Objects.equals(startTime, task.startTime);
     }
 
     @Override
@@ -77,6 +108,8 @@ public class Task {
                 ", type=" + type +
                 ", name='" + name + '\'' +
                 ", status=" + status +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
                 '}';
     }
 }

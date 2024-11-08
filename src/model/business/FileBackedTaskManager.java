@@ -6,7 +6,7 @@ import java.io.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
+import java.util.Optional;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private File file;
@@ -52,7 +52,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            bufferedWriter.write("id,type,name,status,description,epic");
+            bufferedWriter.write("id,type,name,status,description,epic,duration,startTime");
             bufferedWriter.newLine();
 
             for (Task task : getTasks()) {
@@ -77,9 +77,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Integer addNewTask(Task task) {
-        if (task == null) {
-            throw new ManagerSaveException("Пустая задача");
-        }
+        Optional.ofNullable(task)
+                .orElseThrow(() -> new ManagerSaveException("Пустая задача"));
 
         Integer taskId = super.addNewTask(task);
         save();
@@ -87,9 +86,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public Integer addNewEpic(Epic epic) {
-        if (epic == null) {
-            throw new ManagerSaveException("Пустой эпик");
-        }
+        Optional.ofNullable(epic)
+                .orElseThrow(() -> new ManagerSaveException("Пустойой эпик"));
 
         Integer epicId = super.addNewEpic(epic);
         save();
@@ -98,9 +96,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Integer addNewSubtask(Subtask subtask) {
-        if (subtask == null) {
-            throw new ManagerSaveException("Пустая подзадача");
-        }
+        Optional.ofNullable(subtask)
+                .orElseThrow(() -> new ManagerSaveException("Пустая подзадача"));
 
         Integer subtaskId = super.addNewSubtask(subtask);
         save();

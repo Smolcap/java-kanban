@@ -16,14 +16,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         if (task == null) {
             return;
-        } else if (saveIdsAndNodes.containsKey(task.getId())) {
+        }
+        if (saveIdsAndNodes.containsKey(task.getId())) {
             Node<Task> getNodeForTask = saveIdsAndNodes.get(task.getId());
             removeNode(getNodeForTask);
         }
 
         linkLast(task);
-
-        task.setId(task.getId());
 
         saveIdsAndNodes.put(task.getId(), tail);
     }
@@ -35,6 +34,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             Node<Task> nodeTask = saveIdsAndNodes.get(id);
             removeNode(nodeTask);
+            System.out.println("Задача успешно удалена из истории");
         }
     }
 
