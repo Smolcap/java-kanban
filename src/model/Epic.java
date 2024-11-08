@@ -9,6 +9,7 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description);
+        this.type = TypeTask.EPIC;
     }
 
     public int getEpic(Subtask subtask) {
@@ -45,14 +46,16 @@ public class Epic extends Task {
         return Objects.hash(super.hashCode(), subtaskId);
     }
 
+
     @Override
     public String toString() {
         return "Epic{" +
-                "subTaskId=" + subtaskId +
+                "subtaskId=" + subtaskId +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", status=" + status +
+                ", type=" + type +
                 '}';
     }
 }

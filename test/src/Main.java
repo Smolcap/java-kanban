@@ -1,4 +1,4 @@
-package test.src;
+package src;
 
 public class Main {
 
