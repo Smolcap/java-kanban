@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     InMemoryHistoryManager inMemoryHistoryManager;
@@ -43,7 +43,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
         Assertions.assertThrows(ManagerSaveException.class, () -> {
             FileBackedTaskManager.loadFromFile(invalidFile);
-        }, "Должно выбросить исключение при загрузке из недоступного файла");
+        }, "Должноо выбросить исключение при загрузке из недоступного файла");
     }
 
     @Test
